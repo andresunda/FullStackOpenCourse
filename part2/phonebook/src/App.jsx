@@ -1,15 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import axios from "axios";
+
+
 
 const App = () => {
+  const [notes, setNotes] = useState([])
+
   const [formData, setFormData] = useState({
     name: "",
     phonenumber: "",
   });
   const [persons, setPersons] = useState([]);
 
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+      .catch(error => {
+        console.log("Eror al cargar datos", error)
+      })
+  }, [])
+
+  useEffect(() => {
+    console.log("Arreglo de notas actualizado", notes);
+  }, [notes]);  
+  
   const addUsers = (event) => {
     event.preventDefault();
     if (formData.name.trim() === "") {
